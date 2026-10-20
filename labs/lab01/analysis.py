@@ -64,12 +64,46 @@ def summarize(frame: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def load_excel_series(names: tuple[str, ...], skiprows: int, nrows: int) -> pd.DataFrame:
+    """Read source observations from the workbook included in the submission."""
+    workbook = LAB_DIR / "lab01.xlsx"
+    if not workbook.is_file():
+        workbook = OUTPUT_DIR / "lab01.xlsx"
+    data = pd.read_excel(
+        workbook,
+        sheet_name="Lab 1",
+        header=None,
+        skiprows=skiprows,
+        nrows=nrows,
+        usecols=range(1, 1 + 2 * len(names)),
+    )
+    return pd.concat(
+        [
+            pd.DataFrame(
+                {
+                    "series": name,
+                    "x": data.iloc[:, 2 * i].to_numpy(dtype=float),
+                    "y": data.iloc[:, 2 * i + 1].to_numpy(dtype=float),
+                }
+            )
+            for i, name in enumerate(names)
+        ],
+        ignore_index=True,
+    )
+
+
 def load_anscombe() -> pd.DataFrame:
-    return pd.read_csv(DATA_DIR / "anscombe.csv", float_precision="round_trip")
+    path = DATA_DIR / "anscombe.csv"
+    if not path.is_file():
+        return load_excel_series(("I", "II", "III", "IV"), skiprows=112, nrows=11)
+    return pd.read_csv(path, float_precision="round_trip")
 
 
 def load_task3() -> pd.DataFrame:
-    frame = pd.read_csv(DATA_DIR / "dane_zad3.csv", float_precision="round_trip")
+    path = DATA_DIR / "dane_zad3.csv"
+    if not path.is_file():
+        return load_excel_series(SELECTED_SERIES, skiprows=128, nrows=142)
+    frame = pd.read_csv(path, float_precision="round_trip")
     frame = frame.rename(columns={"seria danych": "series"})
     if list(frame.columns) != ["series", "x", "y"] or frame.isna().any().any():
         raise ValueError("Task 3 requires complete series, x, and y columns.")

@@ -32,7 +32,7 @@ The full task 3 input is in `data/dane_zad3.csv`; its provenance is recorded in
 uv run python -m unittest discover -s labs/lab01 -p 'test_*.py'
 ```
 
-## PDF and ZIP archives
+## PDF and submission ZIP
 
 Copy `report/author.example.tex` to `report/author.tex` and enter the authors and
 group. With TeX Live and `latexmk` installed, run:
@@ -41,9 +41,16 @@ group. With TeX Live and `latexmk` installed, run:
 uv run python labs/lab01/package_submission.py
 ```
 
-This creates `outputs/report.pdf`, `submission/overleaf.zip`, and
-`submission/cw1_<index>_<index>.zip`. The Overleaf archive is a standalone project
-using `main.tex` and pdfLaTeX. The submission ZIP contains the PDF, workbook,
-notebook, code, data, and LaTeX sources.
+This creates `outputs/report.pdf` and `submission/cw1_<index>_<index>.zip`.
+The submission ZIP contains exactly three files at its root:
+
+- `analysis.py`
+- `lab01.xlsx`
+- `report.pdf`
+
+When the CSV inputs are absent, the Python code reads the source observations
+from the included workbook. Extract all three files into one folder and run
+`python analysis.py` with NumPy, pandas, Matplotlib, and openpyxl installed.
+The LaTeX sources remain in the repository for editing.
 
 Personal author details, personalized PDFs, and submission ZIPs are ignored by Git.

@@ -1,8 +1,7 @@
-"""Compile the report and create the ePortal and standalone Overleaf ZIP archives."""
+"""Compile the report and package only the Python code, workbook, and PDF."""
 
 from __future__ import annotations
 
-import hashlib
 import re
 import shutil
 import subprocess
@@ -10,29 +9,14 @@ import zipfile
 from pathlib import Path
 
 LAB_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = LAB_DIR.parents[1]
 REPORT_DIR = LAB_DIR / "report"
 SUBMISSION_DIR = LAB_DIR / "submission"
-
-
-def report_sources() -> list[Path]:
-    sources = list(REPORT_DIR.glob("*.tex"))
-    sources.extend((REPORT_DIR / "tables").glob("*.tex"))
-    sources.extend((REPORT_DIR / "images").glob("*.pdf"))
-    sources.extend((REPORT_DIR / "images").glob("*.png"))
-    return sorted(sources)
 
 
 def main() -> None:
     required = (
         "analysis.py",
-        "solution.ipynb",
-        "test_analysis.py",
-        "data/anscombe.csv",
-        "data/dane_zad3.csv",
         "outputs/lab01.xlsx",
-        "outputs/task1_statistics.csv",
-        "outputs/task3_statistics.csv",
         "report/main.tex",
         "report/results.tex",
     )
@@ -63,56 +47,23 @@ def main() -> None:
     pdf = LAB_DIR / "outputs" / "report.pdf"
     shutil.copy2(REPORT_DIR / "main.pdf", pdf)
     SUBMISSION_DIR.mkdir(exist_ok=True)
-    overleaf = SUBMISSION_DIR / "overleaf.zip"
-    with zipfile.ZipFile(overleaf, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        for path in report_sources():
-            archive.write(path, path.relative_to(REPORT_DIR).as_posix())
-
-    included: dict[str, Path] = {}
-    for name in ("README.md", "pyproject.toml", "uv.lock", ".python-version", "scripts/new_lab.py"):
-        included[name] = PROJECT_ROOT / name
-    for name in (
-        "README.md",
-        "analysis.py",
-        "solution.ipynb",
-        "test_analysis.py",
-        "package_submission.py",
-    ):
-        path = LAB_DIR / name
-        included[path.relative_to(PROJECT_ROOT).as_posix()] = path
-    for path in (LAB_DIR / "data").iterdir():
-        if path.suffix in (".csv", ".json"):
-            included[path.relative_to(PROJECT_ROOT).as_posix()] = path
-    for path in (LAB_DIR / "outputs").iterdir():
-        if path.suffix in (".csv", ".json", ".xml") or path.name == "lab01.xlsx":
-            included[path.relative_to(PROJECT_ROOT).as_posix()] = path
-    for path in report_sources():
-        included[path.relative_to(PROJECT_ROOT).as_posix()] = path
-    for path in (PROJECT_ROOT / "labs" / "_template").rglob("*"):
-        if path.is_file() and (path.name == ".gitkeep" or path.suffix in (".md", ".ipynb")):
-            included[path.relative_to(PROJECT_ROOT).as_posix()] = path
-    included["report.pdf"] = pdf
-    included["overleaf.zip"] = overleaf
-    for name, path in included.items():
-        if not path.is_file():
-            raise SystemExit(f"Required file is missing: {name}")
+    included = {
+        "analysis.py": LAB_DIR / "analysis.py",
+        "lab01.xlsx": LAB_DIR / "outputs" / "lab01.xlsx",
+        "report.pdf": pdf,
+    }
 
     filename = "cw1_" + "_".join(indices) + ".zip"
     destination = SUBMISSION_DIR / filename
-    manifest = []
     with zipfile.ZipFile(destination, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        for name, path in sorted(included.items()):
-            payload = path.read_bytes()
-            archive.writestr(name, payload)
-            manifest.append(f"{hashlib.sha256(payload).hexdigest()}  {name}")
-        archive.writestr("MANIFEST.sha256", "\n".join(manifest) + "\n")
+        for name, path in included.items():
+            archive.write(path, name)
     with zipfile.ZipFile(destination) as archive:
         if archive.testzip() is not None:
             raise RuntimeError("The ZIP integrity check failed.")
-        if "report.pdf" not in archive.namelist() or "overleaf.zip" not in archive.namelist():
-            raise RuntimeError("The ZIP is missing a required deliverable.")
+        if set(archive.namelist()) != set(included):
+            raise RuntimeError("The ZIP must contain exactly the Python code, workbook, and PDF.")
     print(f"Report: {pdf}")
-    print(f"Overleaf project: {overleaf}")
     print(f"ePortal submission: {destination} ({destination.stat().st_size:,} bytes)")
 
 
