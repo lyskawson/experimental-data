@@ -1,102 +1,104 @@
 # Exploration of Experimental Data
 
-Repozytorium na własne rozwiązania list laboratoryjnych. Każde laboratorium ma osobny
-katalog, a wszystkie korzystają ze wspólnego środowiska Python 3.12 zarządzanego przez
+Personal solutions to lab assignments. Each lab has its own directory, and all labs
+share a Python 3.12 environment managed with
 [uv](https://docs.astral.sh/uv/).
 
-## Pierwsze uruchomienie
+## Getting started
 
-Po sklonowaniu repozytorium uruchom w jego katalogu:
+After cloning the repository, run these commands from its root directory:
 
 ```bash
 uv sync --locked
 code .
 ```
 
-`uv` pobierze odpowiedniego Pythona, utworzy `.venv` i zainstaluje biblioteki zgodnie
-z `uv.lock`. Instrukcja instalacji `uv`: [oficjalna dokumentacja](https://docs.astral.sh/uv/getting-started/installation/).
+`uv` downloads the required Python version, creates `.venv`, and installs the dependencies
+specified in `uv.lock`. To install `uv`, see the [official instructions](https://docs.astral.sh/uv/getting-started/installation/).
 
-W VS Code:
+In VS Code:
 
-1. Zainstaluj rozszerzenia z rekomendacji projektu, jeśli edytor o nie poprosi.
-2. Uruchom **Python: Select Interpreter** i wybierz środowisko `.venv`.
-3. Otwórz `labs/lab01/solution.ipynb`.
-4. W **Select Kernel → Python Environments** wybierz Pythona z tego samego `.venv`.
+1. Install the recommended extensions if prompted.
+2. Run **Python: Select Interpreter** and select the `.venv` environment.
+3. Open `labs/lab01/solution.ipynb`.
+4. Under **Select Kernel → Python Environments**, select Python from the same `.venv`.
 
-Notebook ma przygotowane miejsca na kod, wykresy i wnioski. Rozwiązania należy uzupełnić
-samodzielnie. Można też pisać zwykłe pliki `.py` w katalogu danego laboratorium:
+The notebook provides space for code, plots, and conclusions. Complete the solutions
+yourself. You can also write regular `.py` files in each lab directory:
 
 ```bash
 uv run python labs/lab01/solution.py
 ```
 
-Powyższe polecenie zakłada, że wcześniej utworzysz `solution.py`.
+Create `solution.py` before running the command above.
 
-## Układ katalogów
+## Project structure
 
 ```text
 experimental-data/
-├── .vscode/                 # Interpreter, formatowanie i rozszerzenia VS Code
+├── .vscode/                 # VS Code interpreter, formatting, and extensions
 ├── labs/
 │   ├── lab01/
-│   │   ├── README.md        # Informacje o laboratorium
-│   │   ├── solution.ipynb   # Notebook na rozwiązania
-│   │   ├── data/            # Dane wejściowe, np. CSV
-│   │   ├── materials/       # Lokalne listy i materiały prowadzącego
-│   │   └── outputs/         # Wykresy, eksporty i sprawozdanie
-│   └── _template/           # Szablon kolejnego laboratorium
+│   │   ├── README.md        # Lab notes and requirements
+│   │   ├── solution.ipynb   # Notebook for solutions
+│   │   ├── data/            # Input data, such as CSV files
+│   │   ├── materials/       # Local assignment sheets and course materials
+│   │   └── outputs/         # Plots, exports, and the lab report
+│   └── _template/           # Template for future labs
 ├── scripts/
-│   └── new_lab.py           # Tworzenie następnego laboratorium
+│   └── new_lab.py           # Creates a new lab directory
 ├── .python-version
-├── pyproject.toml           # Biblioteki i ustawienia narzędzi
-└── uv.lock                  # Dokładne wersje zależności
+├── pyproject.toml           # Dependencies and tool settings
+└── uv.lock                  # Exact dependency versions
 ```
 
-Pierwsze laboratorium: [regresja liniowa i kwartet Anscombe'a](labs/lab01/README.md).
+First lab: [linear regression and Anscombe's quartet](labs/lab01/README.md).
 
-## Kolejne laboratorium
+## Adding a lab
 
 ```bash
-uv run python scripts/new_lab.py 2 --title "Temat drugiego laboratorium"
+uv run python scripts/new_lab.py 2 --title "Second lab topic"
 ```
 
-Powstanie `labs/lab02/` z notebookiem, opisem oraz katalogami `data`, `materials`
-i `outputs`. Istniejący katalog nie zostanie nadpisany. Numer i tytuł zostaną wpisane
-do notebooka i opisu. Każda następna lista korzysta z tego samego środowiska `.venv`.
+This creates `labs/lab02/` with a notebook, a README, and the `data`, `materials`, and
+`outputs` directories. Existing lab directories are never overwritten. The lab number
+and title are added to the notebook and README. All labs use the same `.venv` environment.
+Use an English title, as all README files in this repository are written in English.
 
-## Biblioteki i codzienna praca
+## Libraries and everyday commands
 
-Zainstalowane biblioteki: NumPy, pandas, SciPy, Matplotlib, seaborn, scikit-learn
-i openpyxl. Narzędzia deweloperskie obejmują ipykernel, JupyterLab i Ruff.
+Installed libraries include NumPy, pandas, SciPy, Matplotlib, seaborn, scikit-learn,
+and openpyxl. Development tools include ipykernel, JupyterLab, and Ruff.
 
 ```bash
-# Dodanie biblioteki do projektu i aktualizacja uv.lock
-uv add nazwa-biblioteki
+# Add a dependency and update uv.lock
+uv add package-name
 
-# Sprawdzenie kodu oraz notebooków
+# Check Python files and notebooks
 uv run ruff check .
 
-# Formatowanie kodu oraz notebooków
+# Format Python files and notebooks
 uv run ruff format .
 
-# Opcjonalnie: praca w JupyterLab zamiast w VS Code
+# Optional: work in JupyterLab
 uv run jupyter lab
 ```
 
-Polecenia uruchamiaj z głównego katalogu repozytorium. `uv run` korzysta ze środowiska
-projektu, więc ręczna aktywacja `.venv` nie jest konieczna.
+Run these commands from the repository root. `uv run` uses the project environment,
+so you do not need to activate `.venv` manually.
 
-Notebook ustala katalog główny projektu i definiuje `DATA_DIR` oraz `OUTPUT_DIR`.
-Przykładowo dane można później wczytać przez `pd.read_csv(DATA_DIR / "dane.csv")`,
-a wykres zapisać przez `plt.savefig(OUTPUT_DIR / "wykres.png")`.
+The notebook locates the project root and defines `DATA_DIR` and `OUTPUT_DIR`.
+For example, load data with `pd.read_csv(DATA_DIR / "data.csv")` and save a plot
+with `plt.savefig(OUTPUT_DIR / "plot.png")`.
 
-## Git i GitHub
+## Git and GitHub
 
-Do repozytorium trafiają kod, notebooki, małe dane potrzebne do odtworzenia analiz
-i wybrane wyniki. `.venv`, cache, pliki `.env` oraz zawartość katalogów `materials/`
-są pomijane. Lokalny PDF z pierwszą listą znajduje się w `labs/lab01/materials/`.
+The repository contains code, notebooks, small datasets needed to reproduce analyses,
+and selected results. `.venv`, caches, `.env` files, and the contents of `materials/`
+directories are ignored. The local PDF for the first assignment is stored in
+`labs/lab01/materials/`.
 
-Przed wysłaniem zmian przejrzyj pliki i wyniki komórek notebooka:
+Review your changes and notebook outputs before pushing:
 
 ```bash
 git status
@@ -106,6 +108,6 @@ git commit -m "Add lab 01 solutions"
 git push
 ```
 
-Jeżeli dodajesz biblioteki, do tego samego commita dołącz `pyproject.toml` i `uv.lock`.
+When adding dependencies, include `pyproject.toml` and `uv.lock` in the same commit.
 
-Szczegóły pracy z notebookami: [uv i Jupyter w VS Code](https://docs.astral.sh/uv/guides/integration/jupyter/#using-jupyter-from-vs-code).
+For more details, see [using uv with Jupyter in VS Code](https://docs.astral.sh/uv/guides/integration/jupyter/#using-jupyter-from-vs-code).

@@ -1,24 +1,25 @@
-# Laboratorium 01 - Regresja liniowa i kwartet Anscombe'a
+# Lab 01 - Linear regression and Anscombe's quartet
 
-Rozwiązania zapisuj w `solution.ipynb` lub we własnych plikach `.py` w tym katalogu.
-Wszystkie laboratoria korzystają ze środowiska `.venv` w głównym katalogu projektu.
+Write your solutions in `solution.ipynb` or in your own `.py` files in this directory.
+All labs share the `.venv` environment in the project root.
 
-- `data/` - dane wejściowe do analizy.
-- `materials/` - lokalna treść listy i materiały prowadzącego; zawartość pomijana przez Git.
-- `outputs/` - zapisane wykresy, eksporty danych i sprawozdanie.
+- `data/` - input data for analysis.
+- `materials/` - local assignment sheets and course materials; contents are ignored by Git.
+- `outputs/` - saved plots, data exports, and the lab report.
 
-W notebooku wybierz kernel z projektowego `.venv`. Przygotowane zmienne `DATA_DIR`
-i `OUTPUT_DIR` wskazują katalogi tego laboratorium.
+Select the kernel from the project's `.venv` in the notebook. The predefined `DATA_DIR`
+and `OUTPUT_DIR` variables point to this lab's directories.
 
-## Materiały i dane
+## Materials and data
 
-Treść pierwszej listy znajduje się lokalnie w `materials/` jako plik PDF.
-Materiały prowadzącego pozostają poza publicznym repozytorium.
+The first assignment sheet is available locally as a PDF in `materials/`.
+Course materials are kept outside the public repository.
 
-Do zadania 3 potrzebny jest plik `dane_zad3.csv`. Nie było go w folderze początkowym;
-po otrzymaniu umieść go w `data/`. Dane do pozostałych zadań są w treści listy.
+Task 3 requires `dane_zad3.csv`. It was not included in the original folder;
+place it in `data/` once you receive it. Data for the other tasks is included in
+the assignment sheet.
 
-## Organizacja rozwiązania
+## Organizing your solutions
 
-Notebook zawiera osobne miejsca na zadania 1, 2 i 3 oraz końcowe wnioski.
-Arkusz kalkulacyjny i sprawozdanie możesz zapisać w `outputs/`.
+The notebook has separate sections for tasks 1, 2, and 3, followed by conclusions.
+Save your spreadsheet and lab report in `outputs/`.

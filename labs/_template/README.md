@@ -1,15 +1,15 @@
-# Laboratorium - szablon
+# Lab template
 
-Rozwiązania zapisuj w `solution.ipynb` lub we własnych plikach `.py` w tym katalogu.
-Wszystkie laboratoria korzystają ze środowiska `.venv` w głównym katalogu projektu.
+Write your solutions in `solution.ipynb` or in your own `.py` files in this directory.
+All labs share the `.venv` environment in the project root.
 
-- `data/` - dane wejściowe do analizy.
-- `materials/` - lokalna treść listy i materiały prowadzącego; zawartość pomijana przez Git.
-- `outputs/` - zapisane wykresy, eksporty danych i sprawozdanie.
+- `data/` - input data for analysis.
+- `materials/` - local assignment sheets and course materials; contents are ignored by Git.
+- `outputs/` - saved plots, data exports, and the lab report.
 
-W notebooku wybierz kernel z projektowego `.venv`. Przygotowane zmienne `DATA_DIR`
-i `OUTPUT_DIR` wskazują katalogi tego laboratorium.
+Select the kernel from the project's `.venv` in the notebook. The predefined `DATA_DIR`
+and `OUTPUT_DIR` variables point to this lab's directories.
 
-## Notatki
+## Notes
 
-Uzupełnij wymagania dotyczące danych i sprawozdania.
+Add any requirements for the input data and lab report.

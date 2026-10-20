@@ -16,7 +16,7 @@ def create_lab(project_root: Path, number: int, title: str) -> Path:
     name = f"lab{number:02d}"
     template = project_root / "labs" / "_template"
     destination = project_root / "labs" / name
-    heading = f"Laboratorium {number:02d} - {title}"
+    heading = f"Lab {number:02d} - {title}"
 
     # Sprawdź i przygotuj zawartość przed utworzeniem katalogu docelowego.
     notebook = json.loads((template / "solution.ipynb").read_text(encoding="utf-8"))
@@ -25,7 +25,7 @@ def create_lab(project_root: Path, number: int, title: str) -> Path:
         cell["source"] = [line.replace('"_template"', f'"{name}"') for line in cell["source"]]
 
     readme = (template / "README.md").read_text(encoding="utf-8")
-    readme = readme.replace("Laboratorium - szablon", heading, 1)
+    readme = readme.replace("Lab template", heading, 1)
 
     shutil.copytree(template, destination)
     (destination / "README.md").write_text(readme, encoding="utf-8")
@@ -38,12 +38,14 @@ def create_lab(project_root: Path, number: int, title: str) -> Path:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("number", type=int, help="Numer laboratorium, np. 2")
-    parser.add_argument("--title", default="Do uzupełnienia", help="Temat laboratorium")
+    parser.add_argument(
+        "--title", default="To be completed", help="Temat laboratorium po angielsku"
+    )
     args = parser.parse_args()
     project_root = Path(__file__).resolve().parents[1]
 
     try:
-        destination = create_lab(project_root, args.number, args.title.strip() or "Do uzupełnienia")
+        destination = create_lab(project_root, args.number, args.title.strip() or "To be completed")
     except FileExistsError:
         parser.error(f"Katalog lab{args.number:02d} już istnieje. Niczego nie nadpisano.")
     except ValueError as error:
