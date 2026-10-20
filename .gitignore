@@ -28,3 +28,6 @@ Thumbs.db
 *.swp
 ~$*
 .~lock.*#
+
+# Pliki konfiguracyjne IDE
+.vscode/
