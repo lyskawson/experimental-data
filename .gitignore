@@ -1,0 +1,30 @@
+# Środowisko i pliki Pythona
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Cache narzędzi i notebooków
+.ruff_cache/
+.ipynb_checkpoints/
+.jupyter/
+.python_history
+
+# Lokalne ustawienia i dane dostępowe
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+*.log
+
+# Materiały prowadzącego pozostają lokalnie
+/labs/*/materials/*
+!/labs/*/materials/.gitkeep
+
+# Pliki tymczasowe edytorów i arkuszy
+*.swp
+~$*
+.~lock.*#
