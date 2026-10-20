@@ -1,0 +1,14 @@
+{
+  "robust_beta0": 4.000000000000001,
+  "robust_beta1": 0.3455555555555555,
+  "residual_median": 0.004444444444444251,
+  "residual_mad_normal": 0.003294671596678314,
+  "scoring_scale": 0.003294671596678314,
+  "measurement_resolution": 0.01,
+  "threshold": 3.5,
+  "selected_series": [
+    "seria1",
+    "seria9",
+    "seria10"
+  ]
+}

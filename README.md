@@ -23,14 +23,15 @@ In VS Code:
 3. Open `labs/lab01/solution.ipynb`.
 4. Under **Select Kernel → Python Environments**, select Python from the same `.venv`.
 
-The notebook provides space for code, plots, and conclusions. Complete the solutions
-yourself. You can also write regular `.py` files in each lab directory:
+Lab notebooks contain code, plots, and conclusions. Lab 01 includes completed solutions;
+new labs start from a blank template. You can also write regular `.py` files in each lab directory:
 
 ```bash
 uv run python labs/lab01/solution.py
 ```
 
-Create `solution.py` before running the command above.
+Create `solution.py` before running the command above. The completed first lab uses
+`uv run python labs/lab01/analysis.py`; see its README for report and submission commands.
 
 ## Project structure
 

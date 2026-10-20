@@ -31,3 +31,18 @@ Thumbs.db
 
 # Pliki konfiguracyjne IDE
 .vscode/
+
+# Local author details, submission archives, and build files
+/tmp/
+node_modules/
+/labs/*/report/author.tex
+/labs/*/report/main.pdf
+/labs/*/report/*.aux
+/labs/*/report/*.log
+/labs/*/report/*.out
+/labs/*/report/*.toc
+/labs/*/report/*.fls
+/labs/*/report/*.fdb_latexmk
+/labs/*/submission/
+/labs/*/outputs/report.pdf
+/labs/*/data/data_zad3.png

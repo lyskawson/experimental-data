@@ -1,0 +1,27 @@
+{
+  "description": "Task 3 input reconstructed from the supplied screenshot and checked against the authors' original dataset.",
+  "screenshot": "data_zad3.png (local course material; not tracked)",
+  "screenshot_sha256": "1f52fba407252b44592b3a66673b6a6a66c7b738d59ecb10b79d36fc91263968",
+  "source_url": "https://raw.githubusercontent.com/jmatejka/same-stats-different-graphs/b4d82f3a2ff8ef5849fecbdfab6dccafccbc1370/samestats/datasets/generated/DatasaurusDozen.tsv",
+  "source_sha256": "62d417ba1fda3d4ea76f316827df88f9898c9436f70cb3b84130e93b64333096",
+  "csv_sha256": "769d646457760b10dac022ebf6d31dec8ace328ecebf85687c0f5f74291bb698",
+  "records": 1846,
+  "series_count": 13,
+  "records_per_series": 142,
+  "verification": "All 3692 numeric values checked. Six missing decimal points in OCR were resolved by visual inspection of the original screenshot. Original numeric precision and row order preserved.",
+  "series_mapping": {
+    "seria1": "dino",
+    "seria2": "away",
+    "seria3": "h_lines",
+    "seria4": "v_lines",
+    "seria5": "x_shape",
+    "seria6": "star",
+    "seria7": "high_lines",
+    "seria8": "dots",
+    "seria9": "circle",
+    "seria10": "bullseye",
+    "seria11": "slant_up",
+    "seria12": "slant_down",
+    "seria13": "wide_lines"
+  }
+}
