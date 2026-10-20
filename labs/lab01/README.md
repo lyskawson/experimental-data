@@ -53,4 +53,5 @@ from the included workbook. Extract all three files into one folder and run
 `python analysis.py` with NumPy, pandas, Matplotlib, and openpyxl installed.
 The LaTeX sources remain in the repository for editing.
 
-Personal author details, personalized PDFs, and submission ZIPs are ignored by Git.
+The author configuration and local PDF builds are ignored by Git. The submission
+ZIP, including the final report, is stored in the repository.
