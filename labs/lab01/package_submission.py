@@ -30,7 +30,7 @@ def main() -> None:
         "test_analysis.py",
         "data/anscombe.csv",
         "data/dane_zad3.csv",
-        "outputs/anscombe.xlsx",
+        "outputs/lab01.xlsx",
         "outputs/task1_statistics.csv",
         "outputs/task3_statistics.csv",
         "report/main.tex",
@@ -84,7 +84,7 @@ def main() -> None:
         if path.suffix in (".csv", ".json"):
             included[path.relative_to(PROJECT_ROOT).as_posix()] = path
     for path in (LAB_DIR / "outputs").iterdir():
-        if path.suffix in (".csv", ".json", ".xml", ".xlsx"):
+        if path.suffix in (".csv", ".json", ".xml") or path.name == "lab01.xlsx":
             included[path.relative_to(PROJECT_ROOT).as_posix()] = path
     for path in report_sources():
         included[path.relative_to(PROJECT_ROOT).as_posix()] = path

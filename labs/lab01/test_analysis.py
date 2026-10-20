@@ -31,8 +31,8 @@ class AnalysisChecks(unittest.TestCase):
         data = load_anscombe()
         third = data.loc[data.series == "III"]
         original = third.copy(deep=True)
-        for threshold in (3, 3.5, 4):
-            diagnostics = detect_outliers(third, threshold=threshold)
+        for multiplier in (1.25, 1.5, 1.75):
+            diagnostics = detect_outliers(third, multiplier=multiplier)
             removed = diagnostics.loc[diagnostics.is_outlier]
             self.assertEqual(len(removed), 1)
             self.assertEqual(tuple(removed[["x", "y"]].iloc[0]), (13.0, 12.74))
@@ -43,7 +43,7 @@ class AnalysisChecks(unittest.TestCase):
             self.assertFalse(detect_outliers(retained).is_outlier.any())
         pd.testing.assert_frame_equal(third, original)
 
-    def test_exact_linear_majority_zero_mad_is_handled(self):
+    def test_iqr_flags_a_clear_extreme_value(self):
         frame = pd.DataFrame({"x": np.arange(7), "y": [1, 3, 5, 7, 9, 11, 40]})
         result = detect_outliers(frame)
         self.assertEqual(result.is_outlier.tolist(), [False] * 6 + [True])
@@ -61,9 +61,9 @@ class AnalysisChecks(unittest.TestCase):
             sizes = export_formats(source, target)
             csv = pd.read_csv(target / "anscombe.csv", float_precision="round_trip")
             pd.testing.assert_frame_equal(csv, source)
-            for filename in ("anscombe.json", "anscombe_pretty.json"):
+            for filename in ("anscombe.json",):
                 self.assertEqual(json.loads((target / filename).read_text()), expected)
-            for filename in ("anscombe.xml", "anscombe_pretty.xml"):
+            for filename in ("anscombe.xml",):
                 elements = ET.parse(target / filename).getroot()
                 records = [
                     {

@@ -2,378 +2,112 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[polish]{babel}
-\usepackage{lmodern}
-\usepackage[margin=2.1cm,headheight=15pt]{geometry}
-\usepackage{amsmath,amssymb,graphicx,booktabs,float}
-\usepackage{siunitx,microtype,enumitem,caption,fancyhdr,xcolor,xurl}
-\usepackage[hidelinks]{hyperref}
-\sisetup{output-decimal-marker={,},group-separator={\,},group-minimum-digits=5,group-digits=integer}
+\usepackage{lmodern,graphicx,booktabs,float,siunitx,enumitem,microtype,caption}
+\usepackage[margin=2cm]{geometry}
+\sisetup{output-decimal-marker={,},group-digits=none}
 \graphicspath{{images/}}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{4pt}
-\setlength{\intextsep}{10pt}
+\setlength{\intextsep}{8pt}
 \setlist[enumerate]{leftmargin=*,itemsep=2pt,topsep=3pt}
-\captionsetup{font=small,labelfont=bf}
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[L]{Analiza danych eksperymentalnych}
-\fancyhead[R]{Ćwiczenie 1}
-\fancyfoot[C]{\thepage}
+\captionsetup{font=small}
 \InputIfFileExists{author.tex}{}{%
-  \newcommand{\StudentNames}{Uzupełnij lokalny plik author.tex}%
-  \newcommand{\StudentIndices}{Numery indeksów do uzupełnienia}%
+  \newcommand{\StudentNames}{Autorzy do uzupełnienia}%
+  \newcommand{\StudentIndices}{Indeksy do uzupełnienia}%
   \newcommand{\LabGroup}{Grupa 2, 15:15--16:55}%
 }
 \input{results.tex}
-\title{\vspace{-1cm}\textbf{Regresja liniowa i kwartet Anscombe'a}\\[3pt]
-\large Sprawozdanie z ćwiczenia 1}
-\author{\StudentNames\\\small Numery indeksów: \StudentIndices\\\small \LabGroup}
-\date{20 października 2026}
-
+\title{\vspace{-1.5cm}Regresja liniowa i kwartet Anscombe'a\\\large Ćwiczenie 1 -- Analiza danych eksperymentalnych}
+\author{\normalsize\StudentNames\\\small Indeksy: \StudentIndices\quad |\quad \LabGroup}
+\date{\small 20 października 2026}
 \begin{document}
 \maketitle
-\thispagestyle{fancy}
+\vspace{-1cm}
 
-\section{Cel, dane i metody obliczeń}
+\section*{Zadanie 1. Kwartet Anscombe'a}
+W Pythonie i Excelu obliczyliśmy średnie, wariancje i korelacje dla czterech serii
+po 11 obserwacji. Dopasowaliśmy proste $y=\beta_0+\beta_1x$ metodą najmniejszych
+kwadratów. Podane wariancje mają dzielnik $n-1$.
 
-Celem ćwiczenia jest obliczenie statystyk opisowych i modeli regresji liniowej,
-porównanie reprezentacji danych oraz ocena wpływu obserwacji odstającej.
-Najważniejsze pytanie dotyczy tego, jak wiele informacji o strukturze danych
-tracimy, ograniczając analizę do średnich, wariancji i korelacji.
-
-W zadaniach 1 i 2 wykorzystano wszystkie 44 pary z czterech serii kwartetu
-Anscombe'a podanych w liście. Każda seria zawiera 11 obserwacji.
-Sformułowanie ,,dane z poprzedniego laboratorium'' w zadaniu 2 przyjęto jako
-odniesienie do danych z zadania 1 tej samej listy.
-W zadaniu 3 wybrano serie 1, 9 i 10, po 142 obserwacje.
-
-\subsection*{Definicje i przyjęte konwencje}
-
-Dla par $(x_i,y_i)$ obliczamy średnie oraz wariancje:
-\begin{align*}
-\bar{x}&=\frac{1}{n}\sum_{i=1}^{n}x_i,&
-s_x^2&=\frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar{x})^2,&
-v_x&=\frac{1}{n}\sum_{i=1}^{n}(x_i-\bar{x})^2.
-\end{align*}
-Analogiczne definicje stosujemy do $y$. W głównych tabelach podajemy
-\textbf{wariancję z próby} $s^2$ (\texttt{ddof=1}). Wariancję opisową zbioru
-$v$ (\texttt{ddof=0}) pokazano osobno dla zadania 1; obie wersje są też w plikach
-wynikowych. Dzięki temu wybór dzielnika jest jawny\cite{numpy}.
-
-Współczynnik Pearsona oraz współczynniki modelu $\hat y=\hat\beta_1 x+\hat\beta_0$
-wyznaczamy ze wzorów:
-\begin{align*}
-S_{xx}&=\sum_i(x_i-\bar{x})^2,&
-S_{yy}&=\sum_i(y_i-\bar{y})^2,&
-S_{xy}&=\sum_i(x_i-\bar{x})(y_i-\bar{y}),\\
-r&=\frac{S_{xy}}{\sqrt{S_{xx}S_{yy}}},&
-\hat\beta_1&=\frac{S_{xy}}{S_{xx}},&
-\hat\beta_0&=\bar y-\hat\beta_1\bar x.
-\end{align*}
-Metoda najmniejszych kwadratów (MNK) minimalizuje sumę kwadratów reszt.
-Jako miary dopasowania podajemy:
-\[
-R^2=1-\frac{\sum_i(y_i-\hat y_i)^2}{S_{yy}},\qquad
-\mathrm{RMSE}=\sqrt{\frac{1}{n}\sum_i(y_i-\hat y_i)^2}.
-\]
-RMSE opisuje błąd dopasowania na analizowanych obserwacjach, a nie ocenę błędu
-predykcji na nowej próbie. W regresji jednej zmiennej z wyrazem wolnym, przy
-niezerowej wariancji obu zmiennych, zachodzi $R^2=r^2$.
-
-Obliczenia w Pythonie zapisano bezpośrednio według powyższych wzorów i sprawdzono
-niezależnie przez \texttt{numpy.linalg.lstsq} oraz funkcje SciPy.
-Arkusz kalkulacyjny zawiera własne formuły, w tym \texttt{AVERAGE}, \texttt{VAR.S},
-\texttt{VAR.P}, \texttt{CORREL}, \texttt{SLOPE}, \texttt{INTERCEPT} i \texttt{RSQ}.
-W obliczeniach nie zaokrąglano danych pośrednich. Zaokrąglenie w tabelach służy
-wyłącznie prezentacji.
-
-\clearpage
-\section{Zadanie 1: kwartet Anscombe'a}
-
-\begin{table}[H]
-\centering\small
+\begin{table}[H]\centering\small
 \input{tables/anscombe_statistics.tex}
-\caption{Średnie, wariancje z próby i korelacja Pearsona dla kompletnych serii.}
+\caption{Statystyki i współczynniki regresji dla czterech serii.}
 \end{table}
-
-\begin{table}[H]
-\centering\small
-\input{tables/anscombe_regression.tex}
-\caption{Współczynniki MNK i miary dopasowania. Zmienną objaśnianą jest $y$.}
-\end{table}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.98\linewidth]{anscombe_regression.pdf}
-\caption{Wszystkie obserwacje i proste MNK. Jednakowe zakresy osi ułatwiają porównanie
-serii. Numeryczne podobieństwo modeli nie oznacza podobieństwa chmur punktów.}
+\begin{figure}[H]\centering
+\includegraphics[width=0.94\linewidth]{anscombe_regression.pdf}
+\caption{Dane i proste regresji. We wszystkich panelach zastosowano te same zakresy osi.}
 \end{figure}
-
-Każda prosta jest w przybliżeniu opisana równaniem $\hat y=0{,}5x+3$.
-Różnice widoczne przy większej liczbie cyfr wynikają z danych zapisanych
-w liście z ograniczoną precyzją. Wartości z arkusza i Pythona są zgodne
-z dokładnością numeryczną, przy zastosowaniu tego samego dzielnika wariancji.
-
-\clearpage
-\subsection{Reszty i interpretacja podobnych statystyk}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.94\linewidth]{anscombe_residuals.pdf}
-\caption{Reszty z modeli liniowych. W serii II widać regularny łuk, a w serii III
-pojedyncze silne odchylenie. W serii IV większość punktów ma identyczne $x$.}
-\end{figure}
-
-\begin{table}[H]
-\centering\small
-\input{tables/population_variances.tex}
-\caption{Wariancje opisowe z dzielnikiem $n$. Dla $n=11$ są równe $10/11$ wariancji z próby.}
-\end{table}
-
-\subsection*{Wnioski z zadania 1}
+\textbf{Wnioski}
 \begin{enumerate}
-\item Wszystkie serie mają dokładnie tę samą średnią $x=9$ i wariancję z próby
-$s_x^2=11$. Te dwie liczby nie informują o rozmieszczeniu punktów na płaszczyźnie.
-\item Średnie $y$, jego wariancje, korelacje i współczynniki regresji są bardzo
-zbliżone, lecz nie identyczne. Zaokrąglenie do dwóch miejsc zaciera te różnice.
-\item Seria I jest w przybliżeniu zgodna z zależnością liniową z rozrzutem.
-Wykres reszt nie ujawnia tak wyraźnego systematycznego łuku jak w serii II.
-\item Seria II ma strukturę zakrzywioną. Wartość $r\approx0{,}816$ nie wystarcza,
-żeby uznać prostą za trafny opis tej zależności; wskazują na to regularne reszty.
-\item Seria III składa się z niemal współliniowych punktów i jednej wyraźnej
-obserwacji odstającej. Ta obserwacja zmienia nachylenie prostej dopasowanej do całości.
-\item W serii IV dziesięć punktów ma $x=8$, a jeden $x=19$. Po usunięciu tego
-ostatniego $S_{xx}=0$, więc nachylenie regresji nie jest identyfikowalne.
-Wynik modelu opiera się tu na jednym punkcie o skrajnym położeniu w osi $x$.
-\item Wszystkie modele wyjaśniają około dwóch trzecich zmienności $y$, mimo
-odmiennej struktury danych. Ocena dopasowania wymaga wykresu obserwacji i reszt.
-\item Różnica między wariancją z próby a wariancją opisową wynika z dzielnika.
-Porównywanie wyników programów wymaga zgodnej konwencji, a nie tylko tej samej nazwy funkcji.
+\item Średnie, wariancje i współczynniki regresji są niemal takie same, mimo różnych układów punktów.
+\item Seria I przedstawia w przybliżeniu zależność liniową z rozrzutem wokół prostej.
+\item Seria II ma wyraźnie zakrzywiony przebieg, którego prosta nie odtwarza.
+\item W serii III jeden punkt odstający zmienia położenie dopasowanej prostej.
+\item W serii IV dziesięć punktów ma $x=8$. Wynik regresji silnie zależy od jedynego punktu z $x=19$.
+\item Podobna korelacja, około 0,816, nie wystarcza do oceny danych. Trzeba obejrzeć wykres.
 \end{enumerate}
 
 \clearpage
-\section{Zadanie 2: formaty danych i obserwacje odstające}
-\subsection{Porównanie CSV, JSON i XML}
-
-W każdym pliku zapisano te same 44 obserwacje w tej samej kolejności, z trzema
-polami: \texttt{series}, \texttt{x}, \texttt{y}. Zastosowano UTF-8 bez BOM i znak
-nowej linii LF. Rozmiar zmierzono na zapisanych bajtach; nie obejmuje on kompresji ZIP
-ani narzutu systemu plików. JSON i XML zapisano w wersji zwartej i z wcięciami.
-
-\begin{table}[H]
-\centering\small
+\section*{Zadanie 2. Zapis danych i usunięcie punktu odstającego}
+Te same 44 obserwacje z zadania 1 zapisaliśmy w formatach CSV, JSON i XML.
+Pliki mają kodowanie UTF-8; ich rozmiary zmierzyliśmy przed kompresją.
+\begin{table}[H]\centering\small
 \input{tables/serialization.tex}
-\caption{Rzeczywiste rozmiary plików wygenerowanych przez skrypt.}
+\caption{Rozmiary plików zawierających te same dane.}
 \end{table}
+CSV zapisuje tabelę w kolejnych wierszach. JSON zapisuje tutaj tablicę obiektów,
+a XML -- rekordy opisane znacznikami.
 
-CSV zawiera wiersz nagłówka i po jednym rekordzie na linię. Nie zapisuje samodzielnie
-typów danych ani jednostek. JSON przechowuje tablicę obiektów, a XML ma element
-główny \texttt{observations} i elementy \texttt{observation} z polami rekordu.
-Wersje z wcięciami mają dokładnie te same wartości co wersje zwarte.
+\textbf{JSON.} Nawiasy \texttt{\{\}} oznaczają obiekt, a \texttt{[]} tablicę.
+Klucze i napisy zapisuje się w podwójnych cudzysłowach. Dwukropek oddziela klucz
+od wartości, a przecinek kolejne elementy. Wartościami mogą być m.in. liczby,
+napisy, tablice, obiekty, \texttt{true}, \texttt{false} i \texttt{null}.
+JSON jest często stosowany w API internetowych i plikach konfiguracyjnych.
+Przykładowy rekord: \texttt{\{"series":"I","x":10.0,"y":8.04\}}.
 
-\subsection*{Składnia i zastosowania JSON}
-JSON jest tekstowym formatem wymiany danych, opisanym w RFC~8259\cite{json}.
-Obiekt zapisujemy w nawiasach klamrowych jako pary klucz--wartość, a tablicę
-w nawiasach kwadratowych. Klucze i napisy wymagają podwójnych cudzysłowów;
-dwukropek oddziela klucz od wartości, a przecinek kolejne elementy.
-Dozwolone wartości to napisy, liczby, obiekty, tablice, \texttt{true},
-\texttt{false} i \texttt{null}. W ścisłym JSON nie ma komentarzy, końcowych
-przecinków, \texttt{NaN} ani nieskończoności. Przykład z pierwszą obserwacją:
-\begin{verbatim}
-[
-  {"series": "I", "x": 10.0, "y": 8.04}
-]
-\end{verbatim}
-JSON jest często używany do przesyłania danych między aplikacjami, np. w API
-usług internetowych, oraz do przechowywania zagnieżdżonych struktur i konfiguracji.
-Sam poprawny zapis składniowy nie gwarantuje poprawności znaczenia pól.
-
-\subsection*{Wnioski dotyczące formatów}
-\begin{enumerate}
-\item CSV zajmuje 555 B i jest najmniejszy dla tej płaskiej tabeli. Nazwy kolumn
-występują w nim raz, podczas gdy JSON i XML powtarzają nazwy pól dla obserwacji.
-\item Zwarty JSON ma 1470 B, czyli około 2,65 razy więcej niż CSV. Zawiera
-więcej jawnej struktury, co ułatwia reprezentację obiektów zagnieżdżonych.
-\item Zwarty XML ma 3033 B. Powtarzane znaczniki otwierające i zamykające
-powodują większy narzut w tym konkretnym schemacie.
-\item Wcięcia zwiększają rozmiar JSON do 2527 B, a XML do 3958 B.
-Czytelność zapisu ma mierzalny koszt, mimo zachowania tych samych danych.
-\item Nie istnieje uniwersalny ranking rozmiarów formatów. Wynik zależy od
-schematu, długości nazw, precyzji liczb, białych znaków i ewentualnej kompresji.
-\item Odczyt kontrolny wszystkich trzech formatów odtwarza 44 rekordy bez
-zmiany wartości i kolejności. Mniejszy plik jest użyteczny tylko wtedy,
-gdy zachowuje pełną informację potrzebną do dalszej analizy.
-\end{enumerate}
-
-\clearpage
-\subsection{Reguła wykrywania punktu odstającego w serii III}
-
-Zamiast odrzucać punkt wyłącznie dlatego, że poprawia $R^2$, najpierw ustalamy
-regułę opartą na odpornej linii odniesienia. Jej nachylenie jest medianą
-nachyleń par punktów o różnych $x$ (estymator Theila--Sena), a wyraz wolny
-wynosi $\operatorname{med}(y)-b_{\mathrm{TS}}\operatorname{med}(x)$\cite{theil}.
-Dla tych danych otrzymano $b_{\mathrm{TS}}=\RobustSlope$ i $a_{\mathrm{TS}}=\RobustIntercept$.
-
-Dla reszt $e_i^{\mathrm{TS}}=y_i-(a_{\mathrm{TS}}+b_{\mathrm{TS}}x_i)$ obliczamy:
-\[
-m=\operatorname{med}(e_i^{\mathrm{TS}}),\quad
-\mathrm{MAD}=\operatorname{med}|e_i^{\mathrm{TS}}-m|,\quad
-z_i=\frac{|e_i^{\mathrm{TS}}-m|}
-{\max\!\left(\mathrm{MAD}/\Phi^{-1}(0{,}75),\;\delta/\sqrt{12}\right)}.
-\]
-Skalowanie przez $\Phi^{-1}(0{,}75)\approx0{,}67449$ odpowiada opcji
-\texttt{scale="normal"} w SciPy\cite{mad}. Przyjmujemy $\delta=0{,}01$, zgodnie
-z rozdzielczością zapisu $y$. Dolne ograniczenie $\delta/\sqrt{12}$ odpowiada
-odchyleniu standardowemu jednostajnego błędu zaokrąglenia. Zapobiega dzieleniu
-przez skalę bliską zeru dla niemal dokładnej prostej. W pełnej serii III MAD
-jest większy od tego ograniczenia, więc nie zmienia ono wskazanego punktu.
-Oznaczamy punkt jako odstający,
-gdy $z_i>3{,}5$. Próg ustalono przed porównaniem wyników regresji.
-Nie traktujemy tej reguły jako formalnego testu istotności.
-
-Mediana reszt wynosi $m=\ResidualCenter$, a skalowany MAD to \ResidualScale.
-Reguła wskazuje dokładnie jedną obserwację: trzeci wiersz serii III,
-$(x,y)=(13;12{,}74)$, ze wskaźnikiem $z=\OutlierScore$.
-Następnie dopasowujemy zwykłą MNK do zachowanych 10 punktów.
-Pełne dane pozostają w plikach wejściowych; odrzucenie jest zapisane jako flaga.
-
-\begin{table}[H]
-\centering\small
+\textbf{Punkt odstający.} W trzeciej serii zastosowaliśmy regułę IQR dla $y$:
+obliczyliśmy kwartyle $Q_1$, $Q_3$ i ich różnicę IQR, a następnie oznaczyliśmy wartości
+poza zakresem od $Q_1-1{,}5\,\mathrm{IQR}$ do $Q_3+1{,}5\,\mathrm{IQR}$.
+Granice wyniosły \LowerBound{} i \UpperBound.
+Reguła wskazała jeden punkt: $(13;12{,}74)$. Po jego usunięciu ponownie dopasowaliśmy prostą.
+\begin{table}[H]\centering\small
 \input{tables/outlier_summary.tex}
-\caption{Regresja MNK przed i po zastosowaniu ustalonej reguły. Każde $R^2$
-dotyczy zbioru wykorzystanego do dopasowania danego modelu.}
+\caption{Regresja przed usunięciem punktu i po jego usunięciu.}
 \end{table}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.98\linewidth]{outlier_comparison.pdf}
-\caption{Zmiana prostej po filtrowaniu. Krzyżyk pokazuje położenie punktu
-odstającego także na prawym panelu, ale nie bierze on udziału w tamtym dopasowaniu.}
+\begin{figure}[H]\centering
+\includegraphics[width=0.94\linewidth]{outlier_comparison.pdf}
+\caption{Porównanie serii III przed usunięciem punktu i po jego usunięciu.}
 \end{figure}
-
-\clearpage
-\subsection{Diagnostyka i wnioski z filtrowania}
-
-\begin{table}[H]
-\centering\small
-\input{tables/outlier_diagnostics.tex}
-\caption{Pełna diagnostyka 11 obserwacji serii III. Kolejność jest zgodna z listą.
-Tylko jeden wskaźnik przekracza przyjęty próg 3,5.}
-\end{table}
-
+\textbf{Wnioski}
 \begin{enumerate}
-\item Po odrzuceniu jednego punktu $R^2$ rośnie z \FullRtwo{} do \CleanRtwo.
-Dziesięć zachowanych punktów układa się niemal na jednej prostej.
-\item Nachylenie maleje z \FullSlope{} do \CleanSlope, a wyraz wolny rośnie
-z \FullIntercept{} do \CleanIntercept. Jedna obserwacja wpływa więc na oba
-parametry, a nie tylko na końcowy błąd dopasowania.
-\item RMSE spada z około \num{1.118286} do \num{0.002756}. Rozrzut zachowanych
-punktów względem prostej jest bardzo mały w skali dokładności danych wejściowych.
-\item Reguła wskazuje jeden punkt, a pozostałe wskaźniki nie przekraczają
-około 1,35. Nie ma tu granicznego przypadku bliskiego progowi 3,5.
-\item Zmiana progu z 3,5 na 3 lub 4 nie zmienia wskazanej obserwacji.
-Wynik jest stabilny na tę niewielką zmianę decyzji, choć nie dowodzi to
-uniwersalnej skuteczności metody dla innych rozkładów.
-\item Prostej odpornej użyto do wykrywania odchylenia, a końcowe współczynniki
-wyznaczono ponownie MNK. Oddzielono więc regułę selekcji od prezentowanego modelu.
-\item Oba $R^2$ obliczono dla różnych zbiorów. Poprawa dopasowania nie jest
-dowodem lepszej predykcji na niezależnych danych i sama nie uzasadnia usuwania obserwacji.
-\item Bez informacji o pomiarze nie można stwierdzić, że punkt jest błędny.
-W praktyce należałoby sprawdzić jego pochodzenie, zapisać przyczynę decyzji
-i pokazać wyniki przed oraz po filtrowaniu, tak jak w tym ćwiczeniu.
+\item CSV zajmuje najmniej miejsca, ponieważ nazwy kolumn zapisuje tylko raz.
+\item JSON i XML mają większy narzut przez powtarzane klucze lub znaczniki, ale czytelnie opisują strukturę danych.
+\item Wszystkie trzy formaty przechowują te same obserwacje. Różni się sposób ich zapisu.
+\item Reguła IQR wskazuje dokładnie jeden punkt odstający: $(13;12{,}74)$.
+\item Po jego usunięciu $R^2$ rośnie z \FullRtwo{} do \CleanRtwo. Pozostałe punkty są niemal współliniowe.
+\item Lepsze dopasowanie po usunięciu punktu nie dowodzi błędu pomiaru. Warto zachować i porównać oba wyniki.
 \end{enumerate}
 
 \clearpage
-\section{Zadanie 3: trzy serie z pliku CSV}
-
-Plik \texttt{dane\_zad3.csv} odtworzono z dostarczonego obrazu danych.
-Wszystkie 1846 rekordów porównano ze źródłowym zbiorem autorów Datasaurus Dozen;
-zachowano kolejność, nazwy \texttt{seria1}--\texttt{seria13} i precyzję liczb.
-Szczegóły weryfikacji i identyfikatory plików zapisano w \texttt{provenance.json}.
-Zbiór został opracowany jako przykład różnych obrazów przy zbliżonych statystykach\cite{datasaurus}.
-Wybrano wymaganą serię 1 oraz serie 9 i 10: \texttt{dino}, \texttt{circle} i \texttt{bullseye}.
-
-\begin{table}[H]
-\centering\small
+\section*{Zadanie 3. Trzy serie z pliku CSV}
+Wybraliśmy serię 1 oraz serie 9 i 10, po 142 obserwacje.
+W Pythonie obliczyliśmy wymagane statystyki i dopasowaliśmy proste regresji.
+Wyniki i wykresy umieściliśmy również w tym samym arkuszu Excel co pozostałe zadania.
+\begin{table}[H]\centering\small
 \input{tables/task3_statistics.tex}
-\caption{Statystyki wybranych serii. Wariancje z próby mają dzielnik $141$.
-Wariancje z dzielnikiem $142$ są dostępne w pliku wynikowym.}
+\caption{Statystyki i współczynniki regresji dla wybranych serii. Wariancje mają dzielnik $n-1$.}
 \end{table}
-
-\begin{table}[H]
-\centering\small
-\input{tables/task3_regression.tex}
-\caption{Regresja liniowa w zadaniu 3. Każdy model dopasowano do 142 obserwacji.}
-\end{table}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.96\linewidth]{task3_regression.pdf}
-\caption{Dane i proste regresji dla serii 1, 9 i 10. Jednakowe skale i proporcje
-osi zachowują kształty chmur punktów: dinozaura, pierścienia i tarczy.}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{task3_regression.pdf}
+\caption{Dane i proste regresji dla serii 1, 9 i 10.}
 \end{figure}
-
-\subsection*{Wnioski z zadania 3}
+\textbf{Wnioski}
 \begin{enumerate}
-\item W każdej serii średnie wynoszą w przybliżeniu $\bar x=54{,}26$ i
-$\bar y=47{,}83$, choć wykresy przedstawiają trzy różne układy punktów.
-\item Wariancje z próby wynoszą około $s_x^2=281$ i $s_y^2=725$.
-Podobieństwo rozrzutu w każdej osi nie określa wspólnej struktury $(x,y)$.
-\item Korelacje od około $-0{,}064$ do $-0{,}069$ wskazują na bardzo słabą
-zależność liniową. Nie oznacza to braku zależności lub braku struktury geometrycznej.
-\item Modele mają $R^2$ poniżej 0,005, zatem wyjaśniają mniej niż 0,5\% zmienności
-$y$. Prawie pozioma prosta nie opisuje widocznego pierścienia ani tarczy.
-\item Serie 9 i 10 mają szczególnie zbliżone współczynniki regresji, a jednak
-jedna tworzy pojedynczy pierścień, a druga strukturę tarczy. Statystyki nie odróżniają tych kształtów.
-\item Jednakowe skale i proporcje osi zachowują geometrię danych. Seria 9 tworzy
-owalny pierścień; źródłowa nazwa \texttt{circle} nie oznacza idealnego okręgu w tej skali.
+\item Średnie są zbliżone: $\bar{x}\approx54{,}26$ i $\bar{y}\approx47{,}83$, mimo różnych kształtów danych.
+\item Podobne wariancje, około 281 dla $x$ i 725 dla $y$, nie opisują rozmieszczenia punktów na płaszczyźnie.
+\item Korelacje od około $-0{,}064$ do $-0{,}069$ oznaczają bardzo słabą zależność liniową.
+\item Mała korelacja nie oznacza braku struktury: widać dinozaura, owalny pierścień i tarczę.
+\item Prawie poziome proste nie odtwarzają widocznych kształtów. Sam model liniowy opisuje te dane słabo.
+\item Wykresy ujawniają różnice, których nie widać w podobnych średnich, wariancjach i współczynnikach korelacji.
 \end{enumerate}
-
-\clearpage
-\section{Wnioski końcowe i odtwarzalność}
-
-\begin{enumerate}
-\item Kwartet Anscombe'a i trzy serie Datasaurus prowadzą do wspólnego wyniku:
-średnie, wariancje, korelacja i prosta regresji nie stanowią pełnego opisu danych.
-\item Wykres punktowy ujawnia nieliniowość, skupienia i szczególne obserwacje,
-a wykres reszt pozwala ocenić, czy prosta pomija regularny wzorzec.
-\item Współczynnik $R^2$ opisuje dopasowanie konkretnego modelu do konkretnego
-zbioru. Nie zastępuje analizy jakości danych ani oceny predykcji poza próbą.
-\item Jawna definicja wariancji, zachowanie oryginalnych obserwacji i zapis
-reguły filtrowania pozwalają zweryfikować decyzje analityczne.
-\item Dwa niezależne środowiska obliczeń dają kontrolę poprawności rachunków,
-lecz zgodne wyniki liczbowe nadal wymagają oceny graficznej i interpretacji.
-\end{enumerate}
-
-\subsection*{Pliki i odtworzenie wyników}
-
-Archiwum zawiera wykonany notebook, moduł \texttt{analysis.py}, testy obliczeń,
-dane wejściowe, eksporty w formatach CSV, JSON i XML, arkusz kalkulacyjny oraz PDF i kompletny
-projekt LaTeX. W głównym katalogu projektu należy uruchomić:
-\begin{verbatim}
-uv sync --locked
-uv run python labs/lab01/analysis.py
-uv run python -m unittest discover -s labs/lab01 -p 'test_*.py'
-\end{verbatim}
-Tabele i ilustracje w sprawozdaniu są generowane z tych samych danych co wyniki
-w notebooku. Arkusz zawiera formuły i edytowalne wykresy punktowe z prostymi regresji.
-Przygotowany projekt można przesłać do Overleafa jako ZIP i kompilować
-przy użyciu pdfLaTeX. Głównym plikiem jest \texttt{main.tex}.
-
-\begin{thebibliography}{9}
-\bibitem{list} K. Halawa, \emph{Laboratorium: Regresja liniowa, kwartet Anscombe'a},
-lista zadań udostępniona w ramach przedmiotu Analiza danych eksperymentalnych.
-\bibitem{numpy} NumPy, dokumentacja \texttt{numpy.var}, definicja parametru \texttt{ddof}.
-\url{https://numpy.org/doc/stable/reference/generated/numpy.var.html}.
-\bibitem{json} T. Bray, \emph{The JavaScript Object Notation (JSON) Data Interchange Format},
-RFC 8259, 2017. \url{https://www.rfc-editor.org/rfc/rfc8259}.
-\bibitem{theil} SciPy, dokumentacja \texttt{scipy.stats.theilslopes}.
-\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.theilslopes.html}.
-\bibitem{mad} SciPy, dokumentacja \texttt{scipy.stats.median\_abs\_deviation}.
-\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.median_abs_deviation.html}.
-\bibitem{datasaurus} J. Matejka, G. Fitzmaurice, \emph{Same Stats, Different Graphs}, CHI 2017,
-doi:10.1145/3025453.3025912. Materiały i oryginalne dane:
-\url{https://www.research.autodesk.com/publications/same-stats-different-graphs/};
-repozytorium autorów: \url{https://github.com/jmatejka/same-stats-different-graphs}.
-\end{thebibliography}
 \end{document}
