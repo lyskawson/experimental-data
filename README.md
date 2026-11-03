@@ -54,6 +54,7 @@ experimental-data/
 ```
 
 First lab: [linear regression and Anscombe's quartet](labs/lab01/README.md).
+Second lab: [polynomial least squares and regularization](labs/lab02/README.md).
 
 ## Adding a lab
 
