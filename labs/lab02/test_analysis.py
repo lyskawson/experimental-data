@@ -1,5 +1,3 @@
-"""Independent numerical checks: QR solutions, metric definitions, and KKT conditions."""
-
 import unittest
 
 import numpy as np
@@ -48,7 +46,6 @@ class AnalysisChecks(unittest.TestCase):
     def test_regularization_optimality_and_intercept(self):
         data = generate_1d()
         for degree in (2, 3):
-            # Use sklearn's scaler independently of the implementation's manual scaling.
             raw = np.column_stack([data.x**j for j in range(1, degree + 1)])
             scaler = StandardScaler().fit(raw)
             standardized = scaler.transform(raw)
@@ -85,7 +82,6 @@ class AnalysisChecks(unittest.TestCase):
         assert_allclose(data.z, surface(data.x, data.y), atol=0)
         results, coefficients = analyze_2d(data)
         grid_x, grid_y = np.meshgrid(np.linspace(0, 4, 40), np.linspace(0, 4, 40))
-        # Explicit monomials check the basis order, including all mixed terms.
         terms = [
             np.ones_like(grid_x),
             grid_x,

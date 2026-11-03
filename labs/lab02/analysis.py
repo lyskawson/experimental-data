@@ -1,5 +1,3 @@
-"""Lab 02: polynomial least squares, Ridge, LASSO, and a two-variable surface."""
-
 from __future__ import annotations
 
 from pathlib import Path
@@ -25,7 +23,6 @@ ALPHAS = {"Ridge": (0.01, 0.1, 1.0, 10.0), "LASSO": (0.0001, 0.001, 0.01, 0.1)}
 
 
 def generate_1d() -> pd.DataFrame:
-    """Use the assignment's 25 points and Gaussian noise; fix the random seed."""
     rng = np.random.default_rng(SEED_1D)
     x = np.linspace(0, 4, 25)
     reference = np.log2(x + 1)
@@ -38,14 +35,12 @@ def surface(x: np.ndarray, y: np.ndarray) -> np.ndarray:
 
 
 def generate_2d() -> pd.DataFrame:
-    """Generate 200 independent, uniform coordinate pairs without response noise."""
     rng = np.random.default_rng(SEED_2D)
     x, y = 4 * rng.random(200), 4 * rng.random(200)
     return pd.DataFrame({"x": x, "y": y, "z": surface(x, y)})
 
 
 def powers_2d(degree: int) -> list[tuple[int, int]]:
-    """Order by total degree: 1, x, y, x^2, xy, y^2, x^3, x^2 y, xy^2, y^3."""
     return [(i, total - i) for total in range(degree + 1) for i in range(total, -1, -1)]
 
 
@@ -55,7 +50,6 @@ def design_2d(x: np.ndarray, y: np.ndarray, degree: int) -> np.ndarray:
 
 
 def fit_ols(design: np.ndarray, response: np.ndarray) -> np.ndarray:
-    """Solve MNK by NumPy's SVD-based least-squares solver, without forming A.T @ A."""
     coefficients, _, rank, _ = np.linalg.lstsq(design, response, rcond=None)
     if rank != design.shape[1]:
         raise ValueError("The polynomial design matrix must have full column rank.")
@@ -65,7 +59,6 @@ def fit_ols(design: np.ndarray, response: np.ndarray) -> np.ndarray:
 def fit_regularized(
     x: np.ndarray, response: np.ndarray, degree: int, method: str, alpha: float
 ) -> np.ndarray:
-    """Penalize standardized powers of x, then return coefficients in the raw x basis."""
     features = np.vander(x, degree + 1, increasing=True)[:, 1:]
     means, scales = features.mean(axis=0), features.std(axis=0, ddof=0)
     standardized = (features - means) / scales

@@ -1,5 +1,3 @@
-"""Regenerate the analysis, compile the Polish report, and package only code and PDF."""
-
 from __future__ import annotations
 
 import re
