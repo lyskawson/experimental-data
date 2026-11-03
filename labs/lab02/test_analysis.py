@@ -1,7 +1,7 @@
 import unittest
 
 import numpy as np
-from analysis import (
+from cwiczenie2 import (
     ALPHAS,
     analyze_1d,
     analyze_2d,

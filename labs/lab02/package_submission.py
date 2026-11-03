@@ -26,16 +26,16 @@ def main() -> None:
     if len(indices) != 2 or len(set(indices)) != 2:
         raise SystemExit("Enter two different student index numbers.")
 
-    subprocess.run([sys.executable, str(LAB_DIR / "analysis.py")], check=True)
+    subprocess.run([sys.executable, str(LAB_DIR / "cwiczenie2.py")], check=True)
     subprocess.run(
         ["latexmk", "-pdf", "-interaction=nonstopmode", "-halt-on-error", "main.tex"],
         cwd=REPORT_DIR,
         check=True,
         stdout=subprocess.DEVNULL,
     )
-    pdf = LAB_DIR / "outputs" / "report.pdf"
+    pdf = LAB_DIR / "outputs" / "sprawozdanie.pdf"
     shutil.copy2(REPORT_DIR / "main.pdf", pdf)
-    included = {"analysis.py": LAB_DIR / "analysis.py", "report.pdf": pdf}
+    included = {"cwiczenie2.py": LAB_DIR / "cwiczenie2.py", "sprawozdanie.pdf": pdf}
     SUBMISSION_DIR.mkdir(exist_ok=True)
     destination = SUBMISSION_DIR / ("cw2_" + "_".join(indices) + ".zip")
     with zipfile.ZipFile(destination, "w", compression=zipfile.ZIP_DEFLATED) as archive:
@@ -43,7 +43,9 @@ def main() -> None:
             archive.write(path, name)
     with zipfile.ZipFile(destination) as archive:
         if archive.testzip() is not None or set(archive.namelist()) != set(included):
-            raise RuntimeError("The submission must contain exactly analysis.py and report.pdf.")
+            raise RuntimeError(
+                "The submission must contain exactly cwiczenie2.py and sprawozdanie.pdf."
+            )
         for name, path in included.items():
             if archive.read(name) != path.read_bytes():
                 raise RuntimeError(f"The archived {name} differs from the final file.")

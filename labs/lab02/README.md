@@ -10,7 +10,7 @@ Use the existing project environment from the repository root:
 
 ```bash
 uv sync --locked
-uv run python labs/lab02/analysis.py
+uv run python labs/lab02/cwiczenie2.py
 ```
 
 Alternatively, run all cells in `solution.ipynb` using the project's `.venv` kernel.
@@ -64,11 +64,11 @@ With TeX Live and `latexmk` installed:
 uv run python labs/lab02/package_submission.py
 ```
 
-This reruns the analysis, compiles `outputs/report.pdf`, and creates
+This reruns the analysis, compiles `outputs/sprawozdanie.pdf`, and creates
 `submission/cw2_275462_275486.zip`. The archive contains exactly two files at its root:
 
-- `analysis.py`
-- `report.pdf`
+- `cwiczenie2.py`
+- `sprawozdanie.pdf`
 
 The Python analysis works after extracting just those two files into an empty folder.
 It requires NumPy, pandas, Matplotlib, and scikit-learn, as provided by this repository.

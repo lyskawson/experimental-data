@@ -46,4 +46,5 @@ node_modules/
 /labs/*/submission/*
 !/labs/*/submission/cw*.zip
 /labs/*/outputs/report.pdf
+/labs/*/outputs/sprawozdanie.pdf
 /labs/*/data/data_zad3.png
